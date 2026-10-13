@@ -20,6 +20,9 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
+      '@module-federation/vite':
+        specifier: ^1.23.5
+        version: 1.23.5(typescript@5.9.3)(vite@5.4.21)
       '@types/react':
         specifier: ^18.3.12
         version: 18.3.31
@@ -294,6 +297,39 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
+  '@module-federation/dts-plugin@2.9.2':
+    resolution: {integrity: sha512-J84cRrewtUFnFdMeD/91mHtW+Toh3mAWvGnhsFAc9oEbGwqfzJEfgPJri65xdtzWcNhs1d6FImPMTvnjzOnYvA==}
+    peerDependencies:
+      typescript: ^4.9.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
+      vue-tsc: '>=1.0.24'
+    peerDependenciesMeta:
+      vue-tsc:
+        optional: true
+
+  '@module-federation/error-codes@2.9.2':
+    resolution: {integrity: sha512-MTpKubqsJSBgnuw+2Pli1kHL4INeHD5cGnHL84oRANwQAWK7b6lN3ZZTmL3FL6lYn65ImineqZNqGWBv5GQVLQ==}
+
+  '@module-federation/managers@2.9.2':
+    resolution: {integrity: sha512-VtSKLkT2EA1wqCMFXNiklC+XF+5bZPYY3sUQ9LCFHqKS7v7NOJDrwMV6Qtw3fxH4Y6Pe6P28MiU8D9dlzknCKQ==}
+
+  '@module-federation/runtime-core@2.9.2':
+    resolution: {integrity: sha512-S9roTDqLtAWaaDBuug69ZnXXGEx0pUq/yG06J759bjRgfAg2P9+dWEv1q7rB2eMIp7HH4L6s3ColDRYdL6tJ9w==}
+
+  '@module-federation/runtime@2.9.2':
+    resolution: {integrity: sha512-1lPZVy7TkMTTBMkkjgQt7jA+9FAx226yQqEz+X0lFAIbpxIWfpzNQLD+7IydEe83ZhDJpK3cv/9bn3jjQBZeqQ==}
+
+  '@module-federation/sdk@2.9.2':
+    resolution: {integrity: sha512-ILtBFPuYpVcRA/Qay1lJ2hMtZI8fDE/v1n7xiN17e5qx5rSBR3FaamTsmRpN1hIt+gVnoa76CzOP/Y73d8hHNg==}
+
+  '@module-federation/third-party-dts-extractor@2.9.2':
+    resolution: {integrity: sha512-FKJVGx+/jIe16RfmwoyIDVMPAttIFJv6AJCLkKf05IRNvI3RJFqQ1tLP1YjcfGuumCbYuWGa4QKnMla7YjVpqg==}
+
+  '@module-federation/vite@1.23.5':
+    resolution: {integrity: sha512-pZ4gwP3SyuNG9JnYAWFIOJyFz1Kl37hnJyKjajMpPqQwTQkCjY7gn58qEmVwTyBv8VqOA5XxEXe1ZMF3AsOmnw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    peerDependencies:
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     resolution: {integrity: sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ==}
     engines: {node: ^22.20 || ^24.12 || >=25}
@@ -460,6 +496,10 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
+  adm-zip@0.6.1:
+    resolution: {integrity: sha512-Xwrja8nx9e5o2N1my4DsKCeKpdrnACyr1wtbPxBDgGzKzKyE9kRtBFA8mWldI+RVlD7CBZNWY/wQ2+ydwOR6kQ==}
+    engines: {node: '>=14.0'}
+
   baseline-browser-mapping@2.11.28:
     resolution: {integrity: sha512-br0LOmjJqr6Rt4AEkadbcNf67Zpo7EPwKsWbjnRrJIa1QYFHQBqM4C7F2WTbV8ahTEcg1Eo+Y0aWjjORInYFyA==}
     engines: {node: '>=6.0.0'}
@@ -508,6 +548,11 @@ packages:
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+
+  isomorphic-ws@5.0.0:
+    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
+    peerDependencies:
+      ws: '*'
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -582,6 +627,10 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  undici@7.29.1:
+    resolution: {integrity: sha512-RYONW2MeafgYlkVOKYKkA/Ag7BmXqgIWCa8t1m0JcxrQg9pI9lEqRhAOruOBCbAohOa/gkCF+iPi9hrgvTzu6Q==}
+    engines: {node: '>=20.18.1'}
+
   update-browserslist-db@1.3.4:
     resolution: {integrity: sha512-t8wonIOdQyOjtPd2VktlBu6QjTVTks6v8bSi7kd0r2Vll8TK1JYDZtRRdbmCHOAMphkZgrzK+L+vXK4pyZ8t4A==}
     hasBin: true
@@ -617,6 +666,18 @@ packages:
       sugarss:
         optional: true
       terser:
+        optional: true
+
+  ws@8.21.3:
+    resolution: {integrity: sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
         optional: true
 
   yallist@3.1.1:
@@ -824,6 +885,54 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
+  '@module-federation/dts-plugin@2.9.2(typescript@5.9.3)':
+    dependencies:
+      '@module-federation/error-codes': 2.9.2
+      '@module-federation/managers': 2.9.2
+      '@module-federation/sdk': 2.9.2
+      '@module-federation/third-party-dts-extractor': 2.9.2
+      adm-zip: 0.6.1
+      isomorphic-ws: 5.0.0(ws@8.21.3)
+      typescript: 5.9.3
+      undici: 7.29.1
+      ws: 8.21.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@module-federation/error-codes@2.9.2': {}
+
+  '@module-federation/managers@2.9.2':
+    dependencies:
+      '@module-federation/sdk': 2.9.2
+
+  '@module-federation/runtime-core@2.9.2':
+    dependencies:
+      '@module-federation/error-codes': 2.9.2
+      '@module-federation/sdk': 2.9.2
+
+  '@module-federation/runtime@2.9.2':
+    dependencies:
+      '@module-federation/error-codes': 2.9.2
+      '@module-federation/runtime-core': 2.9.2
+      '@module-federation/sdk': 2.9.2
+
+  '@module-federation/sdk@2.9.2': {}
+
+  '@module-federation/third-party-dts-extractor@2.9.2': {}
+
+  '@module-federation/vite@1.23.5(typescript@5.9.3)(vite@5.4.21)':
+    dependencies:
+      '@module-federation/dts-plugin': 2.9.2(typescript@5.9.3)
+      '@module-federation/runtime': 2.9.2
+      '@module-federation/sdk': 2.9.2
+      vite: 5.4.21
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+      - vue-tsc
+
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     optional: true
 
@@ -950,6 +1059,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  adm-zip@0.6.1: {}
+
   baseline-browser-mapping@2.11.28: {}
 
   browserslist@4.29.3:
@@ -1004,6 +1115,10 @@ snapshots:
     optional: true
 
   gensync@1.0.0-beta.2: {}
+
+  isomorphic-ws@5.0.0(ws@8.21.3):
+    dependencies:
+      ws: 8.21.3
 
   js-tokens@4.0.0: {}
 
@@ -1087,6 +1202,8 @@ snapshots:
 
   typescript@5.9.3: {}
 
+  undici@7.29.1: {}
+
   update-browserslist-db@1.3.4(browserslist@4.29.3):
     dependencies:
       browserslist: 4.29.3
@@ -1100,5 +1217,7 @@ snapshots:
       rollup: 4.64.5
     optionalDependencies:
       fsevents: 2.3.3
+
+  ws@8.21.3: {}
 
   yallist@3.1.1: {}
