@@ -4,5 +4,6 @@ dist/
 .DS_Store
 .vite/
 *.tsbuildinfo
-/apps/
+/apps/*
+!/apps/remote/
 /changes/

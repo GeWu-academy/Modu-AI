@@ -9,6 +9,8 @@
     "build": "pnpm -r build",
     "typecheck": "pnpm --filter @modu-ai/module build && pnpm -r typecheck",
     "publish:module": "pnpm --filter @modu-ai/module build && cd packages/ai-module && npm publish",
-    "publish:module:dry": "pnpm --filter @modu-ai/module build && cd packages/ai-module && npm publish --dry-run"
+    "publish:module:dry": "pnpm --filter @modu-ai/module build && cd packages/ai-module && npm publish --dry-run",
+    "dev:remote": "pnpm --filter @modu-ai/module build && pnpm --filter @modu-ai/remote dev",
+    "preview:remote": "pnpm --filter @modu-ai/module build && pnpm --filter @modu-ai/remote build && pnpm --filter @modu-ai/remote preview"
   }
 }
