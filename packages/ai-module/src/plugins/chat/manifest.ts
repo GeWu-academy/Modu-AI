@@ -1,4 +1,4 @@
-import type { PluginManifest } from "../../contracts";
+import type { PluginManifest } from "../../contracts/index.js";
 
 export const chatManifest: PluginManifest = {
   id: "ai.chat",

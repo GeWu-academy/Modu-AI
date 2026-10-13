@@ -1,4 +1,4 @@
-import type { PermissionId } from "./permissions";
+import type { PermissionId } from "./permissions.js";
 
 export interface HostTheme {
   mode: "light" | "dark";

@@ -38,3 +38,12 @@ pnpm typecheck   # 类型检查
 ## 状态
 
 首版骨架：空底座 + 首个插件（对话助手）+ 本地 playground。后端逻辑归属 Modu 的 `apps/api/internal/modules/ai`，尚未开始。
+
+## 发布（npm 公共）
+
+```bash
+pnpm --filter @modu-ai/module build
+cd packages/ai-module && npm publish   # 需已登录并拥有 @modu-ai scope
+```
+
+包入口与类型均指向 `dist`，`publishConfig.access=public` 支持 scoped 包公开发布。

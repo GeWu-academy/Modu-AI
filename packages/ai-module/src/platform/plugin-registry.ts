@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import type { HostAdapter, PluginManifest } from "../contracts";
+import type { HostAdapter, PluginManifest } from "../contracts/index.js";
 
 export interface PluginViewProps {
   host: HostAdapter;

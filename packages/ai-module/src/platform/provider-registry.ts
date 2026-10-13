@@ -1,4 +1,4 @@
-import type { ProviderDescriptor } from "../contracts";
+import type { ProviderDescriptor } from "../contracts/index.js";
 
 export interface ProviderRegistry {
   list(): ProviderDescriptor[];

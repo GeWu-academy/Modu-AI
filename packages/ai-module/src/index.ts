@@ -1,11 +1,11 @@
-import type { HostAdapter, PluginNavEntry } from "./contracts";
+import type { HostAdapter, PluginNavEntry } from "./contracts/index.js";
 import {
   createPluginRegistry,
   createProviderRegistry,
   type PluginRegistry,
   type ProviderRegistry,
-} from "./platform";
-import { builtinPlugins } from "./plugins";
+} from "./platform/index.js";
+import { builtinPlugins } from "./plugins/index.js";
 
 export interface ModuAiApp {
   host: HostAdapter;
@@ -31,7 +31,7 @@ export function createModuAI(host: HostAdapter): ModuAiApp {
   };
 }
 
-export * from "./contracts";
-export * from "./platform";
-export * from "./plugins";
-export type { AiPlugin } from "./platform";
+export * from "./contracts/index.js";
+export * from "./platform/index.js";
+export * from "./plugins/index.js";
+export type { AiPlugin } from "./platform/index.js";

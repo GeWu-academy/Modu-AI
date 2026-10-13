@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { PluginViewProps } from "../../platform";
+import type { PluginViewProps } from "../../platform/index.js";
 
 interface DraftMessage {
   id: string;

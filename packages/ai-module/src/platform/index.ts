@@ -1,2 +1,2 @@
-export * from "./plugin-registry";
-export * from "./provider-registry";
+export * from "./plugin-registry.js";
+export * from "./provider-registry.js";
