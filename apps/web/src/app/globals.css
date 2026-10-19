@@ -1,13 +1,21 @@
 :root {
-  color-scheme: dark;
-  --bg: #0f1115;
-  --panel: #171a21;
-  --border: #262b36;
-  --text: #e6e8ee;
-  --muted: #8b93a7;
-  --accent: #4f7cff;
-  --danger: #ff6b6b;
-  --success: #3ecf8e;
+  color-scheme: light;
+  --bg: #fbf8f1;
+  --panel: rgba(255, 255, 255, 0.62);
+  --panel-strong: rgba(255, 255, 255, 0.85);
+  --border: rgba(176, 149, 106, 0.28);
+  --border-strong: rgba(176, 149, 106, 0.45);
+  --text: #56493a;
+  --muted: #8f7d63;
+  --accent: #b98236;
+  --accent-strong: #9c6b26;
+  --accent-soft: rgba(214, 172, 106, 0.22);
+  --accent-ink: #fffdf8;
+  --danger: #c05b4d;
+  --success: #6f9e63;
+  --warning: #d8a13a;
+  --shadow: 0 12px 32px rgba(152, 120, 73, 0.14);
+  --shadow-soft: 0 6px 18px rgba(152, 120, 73, 0.1);
 }
 
 * {
@@ -16,18 +24,27 @@
 
 body {
   margin: 0;
-  background: var(--bg);
+  min-height: 100vh;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(1100px 720px at 12% -12%, rgba(246, 226, 190, 0.6), transparent 62%),
+    radial-gradient(880px 640px at 104% -6%, rgba(240, 228, 200, 0.55), transparent 58%),
+    radial-gradient(720px 540px at 50% 118%, rgba(238, 225, 197, 0.45), transparent 60%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
-  color: var(--accent);
+  color: var(--accent-strong);
 }
 
 h1,
 h2 {
   margin: 0 0 8px;
+  letter-spacing: 0.01em;
 }
 
 .shell {
@@ -42,39 +59,46 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .brand {
   font-weight: 700;
   font-size: 18px;
   margin-bottom: 12px;
-  color: var(--text);
+  color: var(--accent-strong);
   text-decoration: none;
+  letter-spacing: 0.02em;
 }
 
 .sidebar-group {
   margin: 12px 0 4px;
   font-size: 12px;
   color: var(--muted);
+  letter-spacing: 0.08em;
 }
 
 .nav {
   display: block;
   padding: 8px 10px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 10px;
   background: transparent;
   color: var(--text);
   text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .nav:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--accent-soft);
 }
 
 .nav-active {
-  background: rgba(79, 124, 255, 0.16);
+  background: var(--accent-soft);
   border-color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .content {
@@ -94,8 +118,11 @@ h2 {
 .panel {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 20px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
 }
 
 .muted {
@@ -116,15 +143,19 @@ h2 {
 .card {
   display: block;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 14px;
   text-decoration: none;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: var(--shadow-soft);
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .card:hover {
   border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
 }
 
 .card-title {
@@ -157,10 +188,19 @@ h2 {
 .field input,
 .field select {
   padding: 8px 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: rgba(255, 255, 255, 0.78);
   color: var(--text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field input:focus,
+.field select:focus,
+.composer input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .actions {
@@ -171,11 +211,21 @@ h2 {
 
 button {
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background: var(--accent);
-  color: #fff;
+  background: linear-gradient(180deg, #cf9c50, #b98236);
+  color: var(--accent-ink);
   cursor: pointer;
+  box-shadow: 0 6px 16px rgba(178, 128, 54, 0.25);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 button:disabled {
@@ -193,18 +243,19 @@ button:disabled {
 
 .bubble {
   padding: 8px 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   max-width: 70%;
   white-space: pre-wrap;
 }
 
 .bubble-user {
-  background: rgba(79, 124, 255, 0.18);
+  background: rgba(216, 168, 96, 0.26);
   align-self: flex-end;
 }
 
 .bubble-assistant {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--border);
   align-self: flex-start;
 }
 
@@ -216,10 +267,11 @@ button:disabled {
 .composer input {
   flex: 1;
   padding: 8px 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: rgba(255, 255, 255, 0.78);
   color: var(--text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .provider-list {
@@ -230,8 +282,9 @@ button:disabled {
 
 .provider-item {
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 12px;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .provider-head {
@@ -251,6 +304,7 @@ button:disabled {
   border-radius: 999px;
   padding: 1px 8px;
   color: var(--muted);
+  background: rgba(255, 255, 255, 0.6);
 }
 
 .badge-ok {
@@ -271,11 +325,13 @@ button:disabled {
 .toast {
   border: 1px solid var(--border);
   border-left-width: 3px;
-  border-radius: 8px;
-  background: var(--panel);
+  border-radius: 10px;
+  background: var(--panel-strong);
   padding: 10px 14px;
   max-width: 360px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 28px rgba(152, 120, 73, 0.22);
 }
 
 .toast-info {
@@ -287,7 +343,7 @@ button:disabled {
 }
 
 .toast-warning {
-  border-left-color: #f5a623;
+  border-left-color: var(--warning);
 }
 
 .toast-error {
