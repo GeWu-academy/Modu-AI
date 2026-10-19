@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import type { ChatApiResponse } from "../../contracts/api";
 import type { PluginViewProps } from "../../platform";
 
@@ -105,55 +106,96 @@ export function ChatView({ host }: PluginViewProps) {
         </div>
 
         <div className="messages">
-          {messages.length === 0 ? (
-            <div className="empty-chat">
-              <div className="empty-chat-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
+          <AnimatePresence mode="wait">
+            {messages.length === 0 ? (
+              <motion.div
+                key="empty-chat"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.18 }}
+                className="empty-chat"
+              >
+                <div className="empty-chat-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                </div>
+                <div className="empty-chat-title">开启模型对话会话</div>
+                <div className="empty-chat-desc">
+                  在下方输入框键入测试提示词，或点击以下预设指令快速验证底座 Provider 调度链路：
+                </div>
+                <div className="prompt-suggestions">
+                  {ENTERPRISE_PROMPTS.map((prompt) => (
+                    <motion.button
+                      key={prompt}
+                      type="button"
+                      className="prompt-chip"
+                      whileHover={{ scale: 1.02, x: 2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => void handleSend(prompt)}
+                    >
+                      {prompt} →
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            ) : (
+              <div key="messages-stream" className="messages-stream">
+                {messages.map((message) => {
+                  const isUser = message.role === "user";
+                  return (
+                    <motion.div
+                      key={message.id}
+                      initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                      className={`message-row ${isUser ? "message-user" : "message-assistant"}`}
+                    >
+                      <div className={`message-avatar ${isUser ? "avatar-user" : "avatar-ai"}`}>
+                        {isUser ? "YOU" : "AI"}
+                      </div>
+                      <div className="message-content">
+                        <div className="message-meta">
+                          <span>{isUser ? "用户请求" : "模型响应"}</span>
+                          <span>·</span>
+                          <span>{message.timestamp}</span>
+                        </div>
+                        <div className={`bubble bubble-${message.role}`}>
+                          {message.content}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
-              <div className="empty-chat-title">开启模型对话会话</div>
-              <div className="empty-chat-desc">
-                在下方输入框键入测试提示词，或点击以下预设指令快速验证底座 Provider 调度链路：
-              </div>
-              <div className="prompt-suggestions">
-                {ENTERPRISE_PROMPTS.map((prompt) => (
-                  <button
-                    key={prompt}
-                    type="button"
-                    className="prompt-chip"
-                    onClick={() => void handleSend(prompt)}
-                  >
-                    {prompt} →
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            messages.map((message) => {
-              const isUser = message.role === "user";
-              return (
-                <div
-                  key={message.id}
-                  className={`message-row ${isUser ? "message-user" : "message-assistant"}`}
-                >
-                  <div className={`message-avatar ${isUser ? "avatar-user" : "avatar-ai"}`}>
-                    {isUser ? "YOU" : "AI"}
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {pending && (
+              <motion.div
+                key="thinking-indicator"
+                initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.18 }}
+                className="message-row message-assistant"
+              >
+                <div className="message-avatar avatar-ai">AI</div>
+                <div className="message-content">
+                  <div className="message-meta">
+                    <span>模型思考生成中…</span>
                   </div>
-                  <div className="message-content">
-                    <div className="message-meta">
-                      <span>{isUser ? "用户请求" : "模型响应"}</span>
-                      <span>·</span>
-                      <span>{message.timestamp}</span>
-                    </div>
-                    <div className={`bubble bubble-${message.role}`}>
-                      {message.content}
-                    </div>
+                  <div className="bubble bubble-assistant thinking-bubble">
+                    <span className="thinking-dot" />
+                    <span className="thinking-dot" />
+                    <span className="thinking-dot" />
                   </div>
                 </div>
-              );
-            })
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <div className="composer-container">

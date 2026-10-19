@@ -1,5 +1,23 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "motion/react";
 import { builtinPlugins } from "@/ai-module";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.22, ease: "easeOut" as const } },
+};
 
 export default function HomePage() {
   return (
@@ -19,8 +37,13 @@ export default function HomePage() {
         </div>
 
         {/* 关键运行指标 */}
-        <div className="kpi-grid">
-          <div className="kpi-card">
+        <motion.div
+          className="kpi-grid"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
+          <motion.div variants={itemVariants} className="kpi-card">
             <div className="kpi-label">
               <span>提供商接入</span>
               <span className="badge">多协议</span>
@@ -30,9 +53,9 @@ export default function HomePage() {
               <span className="status-dot" />
               <span>支持 OpenAI / Anthropic / Azure</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="kpi-card">
+          <motion.div variants={itemVariants} className="kpi-card">
             <div className="kpi-label">
               <span>已装载插件</span>
               <span className="badge badge-blue">{builtinPlugins.length} 个活跃</span>
@@ -41,9 +64,9 @@ export default function HomePage() {
             <div className="kpi-meta">
               <span>默认集成：智能对话助手</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="kpi-card">
+          <motion.div variants={itemVariants} className="kpi-card">
             <div className="kpi-label">
               <span>契约版本</span>
               <span className="badge">Single Source</span>
@@ -52,9 +75,9 @@ export default function HomePage() {
             <div className="kpi-meta">
               <span>基于 contracts/ 唯一源头</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="kpi-card">
+          <motion.div variants={itemVariants} className="kpi-card">
             <div className="kpi-label">
               <span>网关适配</span>
               <span className="badge">HostAdapter</span>
@@ -63,8 +86,8 @@ export default function HomePage() {
             <div className="kpi-meta">
               <span>可一键切换 Modu Go API</span>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* 核心服务网格 */}
@@ -74,39 +97,48 @@ export default function HomePage() {
           <span className="muted" style={{ fontSize: "12px" }}>点击卡片进入对应工作区</span>
         </div>
 
-        <div className="cards">
-          <Link className="card" href="/ai/providers">
-            <div className="card-top">
-              <div className="card-title">
-                <span>Provider 基础设施</span>
-                <span className="badge">底座管理</span>
-              </div>
-              <p className="muted">
-                集中配置与注册大语言模型提供商端点、默认模型 ID 与访问凭据引用，支持脱敏回显与连通管理。
-              </p>
-            </div>
-            <div className="card-footer">
-              <span>配置模型提供商</span>
-              <span>→</span>
-            </div>
-          </Link>
-
-          {builtinPlugins.map((plugin) => (
-            <Link key={plugin.manifest.id} className="card" href={plugin.manifest.nav.path}>
+        <motion.div
+          className="cards"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
+          <motion.div variants={itemVariants} whileHover={{ y: -3, transition: { duration: 0.18 } }} whileTap={{ scale: 0.99 }}>
+            <Link className="card" href="/ai/providers" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
               <div className="card-top">
                 <div className="card-title">
-                  <span>{plugin.manifest.nav.label}</span>
-                  <span className="badge badge-blue">业务插件</span>
+                  <span>Provider 基础设施</span>
+                  <span className="badge">底座管理</span>
                 </div>
-                <p className="muted">{plugin.manifest.description}</p>
+                <p className="muted">
+                  集中配置与注册大语言模型提供商端点、默认模型 ID 与访问凭据引用，支持脱敏回显与连通管理。
+                </p>
               </div>
-              <div className="card-footer">
-                <span>启动 {plugin.manifest.nav.label}</span>
+              <div className="card-footer" style={{ marginTop: "auto" }}>
+                <span>配置模型提供商</span>
                 <span>→</span>
               </div>
             </Link>
+          </motion.div>
+
+          {builtinPlugins.map((plugin) => (
+            <motion.div key={plugin.manifest.id} variants={itemVariants} whileHover={{ y: -3, transition: { duration: 0.18 } }} whileTap={{ scale: 0.99 }}>
+              <Link className="card" href={plugin.manifest.nav.path} style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+                <div className="card-top">
+                  <div className="card-title">
+                    <span>{plugin.manifest.nav.label}</span>
+                    <span className="badge badge-blue">业务插件</span>
+                  </div>
+                  <p className="muted">{plugin.manifest.description}</p>
+                </div>
+                <div className="card-footer" style={{ marginTop: "auto" }}>
+                  <span>启动 {plugin.manifest.nav.label}</span>
+                  <span>→</span>
+                </div>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       {/* 架构与安全性合规规范 */}
@@ -118,34 +150,39 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
-          <div style={{ background: "var(--panel-secondary)", padding: "14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
+        <motion.div
+          style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
+          <motion.div variants={itemVariants} style={{ background: "var(--panel-secondary)", padding: "14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
             <div style={{ fontWeight: "600", fontSize: "13px", marginBottom: "6px", color: "var(--text)" }}>
               1. 宿主契约严格隔离
             </div>
             <p className="muted" style={{ fontSize: "12px", lineHeight: "1.5" }}>
               模块核心（contracts / platform / plugins）不直接 import 宿主内部模块，仅依赖 HostAdapter 契约进行通讯。
             </p>
-          </div>
+          </motion.div>
 
-          <div style={{ background: "var(--panel-secondary)", padding: "14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
+          <motion.div variants={itemVariants} style={{ background: "var(--panel-secondary)", padding: "14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
             <div style={{ fontWeight: "600", fontSize: "13px", marginBottom: "6px", color: "var(--text)" }}>
               2. 凭据端到端脱敏
             </div>
             <p className="muted" style={{ fontSize: "12px", lineHeight: "1.5" }}>
               API Key 等敏感认证信息在前端仅做掩码展示，绝不回显明文与落盘日志，真实值由后端统一加密保管。
             </p>
-          </div>
+          </motion.div>
 
-          <div style={{ background: "var(--panel-secondary)", padding: "14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
+          <motion.div variants={itemVariants} style={{ background: "var(--panel-secondary)", padding: "14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
             <div style={{ fontWeight: "600", fontSize: "13px", marginBottom: "6px", color: "var(--text)" }}>
               3. 编译期静态注册
             </div>
             <p className="muted" style={{ fontSize: "12px", lineHeight: "1.5" }}>
               坚决杜绝运行时外部代码热注入与任意命令执行；插件随应用静态编译，白名单严格管控接口调用。
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </>
   );

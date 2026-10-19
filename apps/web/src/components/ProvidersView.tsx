@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import type {
   ProviderCreateRequest,
   ProviderCreateResponse,
@@ -108,107 +109,118 @@ export function ProvidersView() {
           </div>
         </div>
 
-        {/* 注册表单 */}
-        {formOpen && (
-          <form className="form-section" onSubmit={submit}>
-            <div className="form-section-title">注册模型提供商 (Provider)</div>
-            <div className="form-section-desc">
-              填写大模型服务的服务商类别、网络端点与默认模型标识。
-            </div>
+        {/* 注册表单（手风琴平滑折叠展开） */}
+        <AnimatePresence initial={false}>
+          {formOpen && (
+            <motion.div
+              key="provider-form"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+              style={{ overflow: "hidden" }}
+            >
+              <form className="form-section" onSubmit={submit}>
+                <div className="form-section-title">注册模型提供商 (Provider)</div>
+                <div className="form-section-desc">
+                  填写大模型服务的服务商类别、网络端点与默认模型标识。
+                </div>
 
-            <div className="form-grid">
-              <div className="field">
-                <label htmlFor="provider-name">
-                  <span>提供商名称</span>
-                  <span className="hint">必填</span>
-                </label>
-                <input
-                  id="provider-name"
-                  value={name}
-                  placeholder="例如：OpenAI 生产集群"
-                  onChange={(event) => setName(event.target.value)}
-                  required
-                />
-              </div>
+                <div className="form-grid">
+                  <div className="field">
+                    <label htmlFor="provider-name">
+                      <span>提供商名称</span>
+                      <span className="hint">必填</span>
+                    </label>
+                    <input
+                      id="provider-name"
+                      value={name}
+                      placeholder="例如：OpenAI 生产集群"
+                      onChange={(event) => setName(event.target.value)}
+                      required
+                    />
+                  </div>
 
-              <div className="field">
-                <label htmlFor="provider-kind">
-                  <span>协议类别</span>
-                  <span className="hint">标准协议</span>
-                </label>
-                <select
-                  id="provider-kind"
-                  value={kind}
-                  onChange={(event) => setKind(event.target.value as ProviderKind)}
-                >
-                  {PROVIDER_KINDS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <div className="field">
+                    <label htmlFor="provider-kind">
+                      <span>协议类别</span>
+                      <span className="hint">标准协议</span>
+                    </label>
+                    <select
+                      id="provider-kind"
+                      value={kind}
+                      onChange={(event) => setKind(event.target.value as ProviderKind)}
+                    >
+                      {PROVIDER_KINDS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="field">
-                <label htmlFor="provider-base-url">
-                  <span>API Base URL</span>
-                  <span className="hint">可选，默认官方端点</span>
-                </label>
-                <input
-                  id="provider-base-url"
-                  value={baseUrl}
-                  placeholder="https://api.openai.com/v1"
-                  onChange={(event) => setBaseUrl(event.target.value)}
-                />
-              </div>
+                  <div className="field">
+                    <label htmlFor="provider-base-url">
+                      <span>API Base URL</span>
+                      <span className="hint">可选，默认官方端点</span>
+                    </label>
+                    <input
+                      id="provider-base-url"
+                      value={baseUrl}
+                      placeholder="https://api.openai.com/v1"
+                      onChange={(event) => setBaseUrl(event.target.value)}
+                    />
+                  </div>
 
-              <div className="field">
-                <label htmlFor="provider-model">
-                  <span>默认模型 ID</span>
-                  <span className="hint">可选，例如 gpt-4o-mini</span>
-                </label>
-                <input
-                  id="provider-model"
-                  value={modelId}
-                  placeholder="例如：gpt-4o-mini"
-                  onChange={(event) => setModelId(event.target.value)}
-                />
-              </div>
+                  <div className="field">
+                    <label htmlFor="provider-model">
+                      <span>默认模型 ID</span>
+                      <span className="hint">可选，例如 gpt-4o-mini</span>
+                    </label>
+                    <input
+                      id="provider-model"
+                      value={modelId}
+                      placeholder="例如：gpt-4o-mini"
+                      onChange={(event) => setModelId(event.target.value)}
+                    />
+                  </div>
 
-              <div className="field">
-                <label htmlFor="provider-key">
-                  <span>API Key</span>
-                  <span className="hint">提交后脱敏加密</span>
-                </label>
-                <input
-                  id="provider-key"
-                  type="password"
-                  value={apiKey}
-                  placeholder="sk-••••••••"
-                  onChange={(event) => setApiKey(event.target.value)}
-                />
-              </div>
-            </div>
+                  <div className="field">
+                    <label htmlFor="provider-key">
+                      <span>API Key</span>
+                      <span className="hint">提交后脱敏加密</span>
+                    </label>
+                    <input
+                      id="provider-key"
+                      type="password"
+                      value={apiKey}
+                      placeholder="sk-••••••••"
+                      onChange={(event) => setApiKey(event.target.value)}
+                    />
+                  </div>
+                </div>
 
-            <div className="actions">
-              <button type="submit" disabled={createMutation.isPending || !name.trim()}>
-                {createMutation.isPending ? "注册中…" : "确认注册 Provider"}
-              </button>
-              <button
-                type="button"
-                className="btn-secondary"
-                onClick={() => {
-                  setName("");
-                  setBaseUrl("");
-                  setModelId("");
-                  setApiKey("");
-                }}
-              >
-                重置表单
-              </button>
-            </div>
-          </form>
-        )}
+                <div className="actions">
+                  <button type="submit" disabled={createMutation.isPending || !name.trim()}>
+                    {createMutation.isPending ? "注册中…" : "确认注册 Provider"}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={() => {
+                      setName("");
+                      setBaseUrl("");
+                      setModelId("");
+                      setApiKey("");
+                    }}
+                  >
+                    重置表单
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* 提供商资源列表 */}
         <div>
@@ -242,44 +254,54 @@ export function ProvidersView() {
                 </div>
               </div>
             ) : (
-              providers.map((provider) => (
-                <div key={provider.id} className="provider-item">
-                  <div className="provider-head">
-                    <div className="provider-name-group">
-                      <span className="status-dot" />
-                      <span className="provider-name">{provider.name}</span>
-                      <span className="badge">{provider.kind}</span>
-                      {provider.enabled ? <span className="badge badge-ok">活跃可用</span> : null}
-                    </div>
-                    <span className="code-chip">ID: {provider.id}</span>
-                  </div>
-
-                  <div className="provider-details">
-                    <div className="detail-item">
-                      <span className="muted">服务端点：</span>
-                      <span className="code-chip">{provider.baseUrl ?? "默认官方端点"}</span>
-                    </div>
-
-                    <div className="detail-item">
-                      <span className="muted">关联模型：</span>
-                      {provider.models.length > 0 ? (
-                        provider.models.map((model) => (
-                          <span key={model.id} className="badge badge-blue">
-                            {model.id}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="muted">未绑定默认模型</span>
-                      )}
+              <AnimatePresence initial={false}>
+                {providers.map((provider) => (
+                  <motion.div
+                    key={provider.id}
+                    layout
+                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                    className="provider-item"
+                  >
+                    <div className="provider-head">
+                      <div className="provider-name-group">
+                        <span className="status-dot" />
+                        <span className="provider-name">{provider.name}</span>
+                        <span className="badge">{provider.kind}</span>
+                        {provider.enabled ? <span className="badge badge-ok">活跃可用</span> : null}
+                      </div>
+                      <span className="code-chip">ID: {provider.id}</span>
                     </div>
 
-                    <div className="detail-item">
-                      <span className="muted">凭证状态：</span>
-                      <span className="badge">已脱敏保护</span>
+                    <div className="provider-details">
+                      <div className="detail-item">
+                        <span className="muted">服务端点：</span>
+                        <span className="code-chip">{provider.baseUrl ?? "默认官方端点"}</span>
+                      </div>
+
+                      <div className="detail-item">
+                        <span className="muted">关联模型：</span>
+                        {provider.models.length > 0 ? (
+                          provider.models.map((model) => (
+                            <span key={model.id} className="badge badge-blue">
+                              {model.id}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="muted">未绑定默认模型</span>
+                        )}
+                      </div>
+
+                      <div className="detail-item">
+                        <span className="muted">凭证状态：</span>
+                        <span className="badge">已脱敏保护</span>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             )}
           </div>
         </div>
