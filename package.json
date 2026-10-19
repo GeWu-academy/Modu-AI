@@ -1,16 +1,13 @@
 {
   "name": "modu-ai",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "dev": "pnpm --filter @modu-ai/module build && pnpm --filter @modu-ai/playground dev",
-    "build": "pnpm -r build",
-    "typecheck": "pnpm --filter @modu-ai/module build && pnpm -r typecheck",
-    "publish:module": "pnpm --filter @modu-ai/module build && cd packages/ai-module && npm publish",
-    "publish:module:dry": "pnpm --filter @modu-ai/module build && cd packages/ai-module && npm publish --dry-run",
-    "dev:remote": "pnpm --filter @modu-ai/module build && pnpm --filter @modu-ai/remote dev",
-    "preview:remote": "pnpm --filter @modu-ai/module build && pnpm --filter @modu-ai/remote build && pnpm --filter @modu-ai/remote preview"
+    "dev": "pnpm --filter @modu-ai/web dev",
+    "build": "pnpm --filter @modu-ai/web build",
+    "start": "pnpm --filter @modu-ai/web start",
+    "typecheck": "pnpm --filter @modu-ai/web typecheck"
   }
 }

@@ -10,17 +10,17 @@
 
 ## 技术基线
 
-- 前端 TypeScript + React + Vite（与 Modu admin 对齐）。
-- 服务端状态用 TanStack Query，客户端状态用 Zustand。
-- 后端逻辑归属 Modu 的 `apps/api/internal/modules/ai`（Go + Gin + GORM + PostgreSQL + Redis + Asynq），本仓库不承载后端。
-- 契约（类型、manifest、HostAdapter、API DTO）以本仓库为源头，同步进 Modu 的 `apps/api/api/openapi.yaml` 与前端适配层。
+- 前端：TypeScript + React 19 + Next.js（App Router，部署 Vercel），唯一应用为 `apps/web`。
+- 服务端状态用 TanStack Query，客户端状态用 Zustand（引入时遵循）。
+- 后端逻辑归属 Modu 的 `apps/api/internal/modules/ai`（Go + Gin + GORM + PostgreSQL + Redis + Asynq）；本仓库不承载后端（临时例外：`apps/web` 内 Route Handlers 提供占位 AI 接口，Modu 后端就绪后移除）。
+- 契约（类型、manifest、HostAdapter、API DTO）以 `apps/web/src/ai-module/contracts` 为源头，同步进 Modu 的 `apps/api/api/openapi.yaml` 与前端适配层。
 
 ## 架构边界
 
-- 核心代码（contracts / platform / plugins）绝不 import 宿主内部模块，只依赖 `HostAdapter` 契约。
+- 模块核心代码（`src/ai-module` 的 contracts / platform / plugins）绝不 import 宿主内部模块，只依赖 `HostAdapter` 契约。
 - 插件之间不互相 import，只依赖契约层与底座公开 API。
 - 密钥等敏感信息前端脱敏显示；真实值仅在后端加密存储；不得写入源码、日志、变更记录。
-- 不做运行时热加载；插件随宿主构建、静态注册。
+- 不做运行时热加载；插件随应用构建、静态注册。
 
 ## 安全与数据
 
@@ -29,5 +29,5 @@
 
 ## 本地专用目录
 
-- `apps/playground` 为本地测试用宿主壳，不是本仓库核心功能，不提交（`.gitignore` 忽略 `/apps/`）；本仓库的核心交付物是 `packages/ai-module`。
+- `apps/web` 为可部署的独立 Next.js 应用（Vercel，Root Directory 选 `apps/web`），包含并入的 AI 模块源码（`src/ai-module`）。
 - `changes/` 本地专用，不提交、不强制加入版本控制。
