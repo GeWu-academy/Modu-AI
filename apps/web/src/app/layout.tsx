@@ -11,7 +11,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=new URLSearchParams(window.location.search);var t=p.get("theme")||localStorage.getItem("modu_theme")||"white";if(t==="white"||t==="beige"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body>
         <QueryProvider>
           <AppShell>{children}</AppShell>

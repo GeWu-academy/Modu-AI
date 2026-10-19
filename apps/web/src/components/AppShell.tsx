@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { navSections } from "@/lib/nav";
 import { Toaster } from "./Toaster";
+
+export type ThemeMode = "white" | "beige";
 
 function getNavIcon(path: string) {
   if (path === "/" || path === "") {
@@ -58,6 +62,41 @@ function getBreadcrumb(pathname: string) {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const breadcrumb = getBreadcrumb(pathname);
+  const [theme, setTheme] = useState<ThemeMode>("white");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlTheme = params.get("theme") as ThemeMode | null;
+      const saved = (urlTheme === "white" || urlTheme === "beige")
+        ? urlTheme
+        : (localStorage.getItem("modu_theme") as ThemeMode | null);
+
+      if (saved === "white" || saved === "beige") {
+        setTheme(saved);
+        document.documentElement.setAttribute("data-theme", saved);
+        localStorage.setItem("modu_theme", saved);
+      } else {
+        document.documentElement.setAttribute("data-theme", "white");
+      }
+    } catch {
+      document.documentElement.setAttribute("data-theme", "white");
+    }
+  }, []);
+
+  function handleThemeChange(nextTheme: ThemeMode) {
+    setTheme(nextTheme);
+    document.documentElement.setAttribute("data-theme", nextTheme);
+    try {
+      localStorage.setItem("modu_theme", nextTheme);
+    } catch {
+      // ignore storage errors
+    }
+  }
+
+  const isHomeActive = pathname === "/";
 
   return (
     <div className="shell">
@@ -77,10 +116,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="sidebar-group-title">控制台</div>
             <Link
               href="/"
-              className={pathname === "/" ? "nav nav-active" : "nav"}
+              className={`nav ${isHomeActive ? "nav-active" : ""}`}
             >
+              {isHomeActive && (
+                <motion.span
+                  layoutId="sidebar-active-indicator"
+                  className="nav-active-pill"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
               {getNavIcon("/")}
-              <span>控制台首页</span>
+              <span className="nav-label">控制台首页</span>
             </Link>
           </div>
 
@@ -93,10 +139,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Link
                     key={item.path}
                     href={item.path}
-                    className={active ? "nav nav-active" : "nav"}
+                    className={`nav ${active ? "nav-active" : ""}`}
                   >
+                    {active && (
+                      <motion.span
+                        layoutId="sidebar-active-indicator"
+                        className="nav-active-pill"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
                     {getNavIcon(item.path)}
-                    <span>{item.label}</span>
+                    <span className="nav-label">{item.label}</span>
                   </Link>
                 );
               })}
@@ -126,6 +179,75 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="breadcrumb-current">{breadcrumb.page}</span>
           </div>
           <div className="topbar-right">
+            <div className="theme-switcher" role="radiogroup" aria-label="主题风格切换">
+              <button
+                type="button"
+                role="radio"
+                aria-checked={mounted && theme === "white"}
+                className={`theme-btn ${mounted && theme === "white" ? "theme-btn-active" : ""}`}
+                onClick={() => handleThemeChange("white")}
+                title="切换到白色透明风格"
+              >
+                {mounted && theme === "white" && (
+                  <motion.span
+                    layoutId="theme-active-indicator"
+                    className="theme-active-indicator"
+                    transition={{ type: "spring", stiffness: 460, damping: 34 }}
+                  />
+                )}
+                <svg
+                  className="theme-btn-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z" />
+                </svg>
+                <span className="theme-btn-label">白色透明</span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={mounted && theme === "beige"}
+                className={`theme-btn ${mounted && theme === "beige" ? "theme-btn-active" : ""}`}
+                onClick={() => handleThemeChange("beige")}
+                title="切换到温润米黄风格"
+              >
+                {mounted && theme === "beige" && (
+                  <motion.span
+                    layoutId="theme-active-indicator"
+                    className="theme-active-indicator"
+                    transition={{ type: "spring", stiffness: 460, damping: 34 }}
+                  />
+                )}
+                <svg
+                  className="theme-btn-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2" />
+                  <path d="M12 20v2" />
+                  <path d="m4.93 4.93 1.41 1.41" />
+                  <path d="m17.66 17.66 1.41 1.41" />
+                  <path d="M2 12h2" />
+                  <path d="M20 12h2" />
+                  <path d="m6.34 17.66-1.41 1.41" />
+                  <path d="m19.07 4.93-1.41 1.41" />
+                </svg>
+                <span className="theme-btn-label">温润米黄</span>
+              </button>
+            </div>
+
             <span className="env-pill">
               <span className="status-dot" style={{ width: "6px", height: "6px" }} />
               <span>生产环境 · Standalone</span>
@@ -134,7 +256,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </header>
 
         <div className="main-container">
-          {children}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="page-transition-wrapper"
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </main>
 
