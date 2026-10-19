@@ -247,11 +247,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <span className="theme-btn-label">温润米黄</span>
               </button>
             </div>
-
-            <span className="env-pill">
-              <span className="status-dot" style={{ width: "6px", height: "6px" }} />
-              <span>生产环境 · Standalone</span>
-            </span>
           </div>
         </header>
 
