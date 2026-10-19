@@ -1,10 +1,14 @@
-:root {
+:root,
+[data-theme="white"] {
   color-scheme: light;
+  
+  /* 企业级 Slate / Neutral 调色体系 */
   --bg: #f8fafc;
   --sidebar-bg: #ffffff;
   --topbar-bg: #ffffff;
   --panel: #ffffff;
-  --panel-secondary: #fbfcfe;
+  --panel-secondary: #f8fafc;
+  
   --border: #e2e8f0;
   --border-strong: #cbd5e1;
   --border-subtle: #f1f5f9;
@@ -38,20 +42,70 @@
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
-  --radius-xl: 12px;
 
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="beige"] {
+  color-scheme: light;
+  
+  /* 温润米黄体系 */
+  --bg: #f8f6f0;
+  --sidebar-bg: #fdfcfb;
+  --topbar-bg: #fdfcfb;
+  --panel: #ffffff;
+  --panel-secondary: #faf7f2;
+  
+  --border: #e7dfd2;
+  --border-strong: #d5c8b5;
+  --border-subtle: #f3ece0;
+  
+  --text: #262019;
+  --text-secondary: #4a4135;
+  --muted: #7d7265;
+  --subtle: #a89d8f;
+  
+  --primary: #c2782b;
+  --primary-hover: #a5611c;
+  --primary-soft: #fdf6ec;
+  --primary-border: #f5deb8;
+  --primary-ink: #ffffff;
+
+  --dark-btn: #2d261e;
+  --dark-btn-hover: #3e352b;
+
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --danger-border: #fecaca;
+  
+  --success: #16a34a;
+  --success-soft: #f0fdf4;
+  --success-border: #bbf7d0;
+  
+  --warning: #d97706;
+  --warning-soft: #fffbeb;
+  --warning-border: #fde68a;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --shadow-xs: 0 1px 2px 0 rgba(70, 50, 20, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(70, 50, 20, 0.06), 0 1px 2px -1px rgba(70, 50, 20, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(70, 50, 20, 0.07), 0 2px 4px -2px rgba(70, 50, 20, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(70, 50, 20, 0.07), 0 4px 6px -4px rgba(70, 50, 20, 0.04);
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
   min-height: 100vh;
   background-color: var(--bg);
   color: var(--text);
@@ -83,12 +137,12 @@ h1, h2, h3, h4 {
 }
 
 h1 {
-  font-size: 20px;
-  line-height: 1.3;
+  font-size: 18px;
+  line-height: 1.35;
 }
 
 h2 {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.4;
 }
 
@@ -103,17 +157,17 @@ p {
   min-height: 100vh;
 }
 
-/* 侧边栏 */
+/* 企业侧边栏 */
 .sidebar {
   background: var(--sidebar-bg);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  padding: 0;
   position: sticky;
   top: 0;
   height: 100vh;
   user-select: none;
+  z-index: 30;
 }
 
 .sidebar-header {
@@ -132,9 +186,13 @@ p {
   color: var(--text);
 }
 
+.brand:hover {
+  text-decoration: none;
+}
+
 .brand-icon {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   background: var(--dark-btn);
   color: #ffffff;
   border-radius: var(--radius-md);
@@ -142,7 +200,7 @@ p {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
   box-shadow: var(--shadow-xs);
   flex-shrink: 0;
 }
@@ -168,7 +226,7 @@ p {
 .sidebar-body {
   flex: 1;
   overflow-y: auto;
-  padding: 14px 12px;
+  padding: 16px 12px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -177,7 +235,7 @@ p {
 .sidebar-group {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
 .sidebar-group-title {
@@ -199,7 +257,7 @@ p {
   font-weight: 500;
   color: var(--text-secondary);
   text-decoration: none;
-  transition: all 0.12s ease;
+  transition: background-color 0.12s ease, color 0.12s ease;
   border: 1px solid transparent;
 }
 
@@ -225,7 +283,7 @@ p {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
 .nav-active .nav-icon {
@@ -238,7 +296,7 @@ p {
   background: var(--panel-secondary);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   font-size: 12px;
 }
 
@@ -264,6 +322,7 @@ p {
   border-radius: 50%;
   background-color: var(--success);
   box-shadow: 0 0 0 2px var(--success-border);
+  flex-shrink: 0;
 }
 
 /* 主内容区域与顶栏 */
@@ -275,7 +334,7 @@ p {
 }
 
 .topbar {
-  height: 52px;
+  height: 50px;
   background: var(--topbar-bg);
   border-bottom: 1px solid var(--border);
   display: flex;
@@ -336,7 +395,7 @@ p {
   width: 100%;
 }
 
-/* 企业级卡片与容器 */
+/* 企业容器与面板 */
 .panel {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -367,7 +426,7 @@ p {
   line-height: 1.5;
 }
 
-/* 指标卡片网格 */
+/* KPI 指标卡片网格 */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -402,7 +461,7 @@ p {
 }
 
 .kpi-value {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--text);
   letter-spacing: -0.02em;
@@ -450,7 +509,7 @@ p {
 }
 
 .card-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text);
   display: flex;
@@ -533,8 +592,7 @@ p {
 
 .field input,
 .field select,
-.composer input,
-.composer textarea {
+.composer input {
   padding: 7px 11px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-strong);
@@ -547,8 +605,7 @@ p {
 
 .field input:focus,
 .field select:focus,
-.composer input:focus,
-.composer textarea:focus {
+.composer input:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
@@ -561,7 +618,7 @@ p {
   margin-top: 14px;
 }
 
-/* 按钮规范 */
+/* 按钮体系 */
 button,
 .btn {
   display: inline-flex;
@@ -578,7 +635,6 @@ button,
   border: 1px solid transparent;
 }
 
-/* 默认企业级主按钮：Dark Slate 稳重质感 */
 button,
 .btn-primary {
   background: var(--dark-btn);
@@ -666,7 +722,7 @@ button:disabled {
   color: var(--text-secondary);
 }
 
-/* 资源列表与数据行 */
+/* 资源列表 */
 .provider-list {
   display: flex;
   flex-direction: column;
@@ -717,7 +773,7 @@ button:disabled {
   gap: 6px;
 }
 
-/* 对话助手工作台 */
+/* 工作台 Shell */
 .workbench-shell {
   display: flex;
   flex-direction: column;
@@ -792,7 +848,7 @@ button:disabled {
 .empty-chat-desc {
   font-size: 13px;
   color: var(--muted);
-  max-width: 420px;
+  max-width: 440px;
   line-height: 1.5;
 }
 
@@ -903,6 +959,11 @@ button:disabled {
 .composer {
   display: flex;
   gap: 10px;
+  width: 100%;
+}
+
+.composer input {
+  flex: 1;
 }
 
 .composer-hint {
@@ -913,7 +974,7 @@ button:disabled {
   justify-content: space-between;
 }
 
-/* Toast 通知 */
+/* Toast */
 .toasts {
   position: fixed;
   top: 18px;

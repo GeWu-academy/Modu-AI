@@ -66,7 +66,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link href="/" className="brand">
             <div className="brand-icon">M</div>
             <div className="brand-text">
-              <span className="brand-title">Modu AI Platform</span>
+              <span className="brand-title">Modu AI</span>
               <span className="brand-tag">企业级 AI 模块底座</span>
             </div>
           </Link>
