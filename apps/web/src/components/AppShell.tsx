@@ -2,94 +2,142 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { navSections } from "@/lib/nav";
 import { Toaster } from "./Toaster";
 
-export type ThemeMode = "white" | "beige";
+function getNavIcon(path: string) {
+  if (path === "/" || path === "") {
+    return (
+      <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+      </svg>
+    );
+  }
+  if (path.includes("provider")) {
+    return (
+      <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="2" y="2" width="20" height="8" rx="2" />
+        <rect x="2" y="14" width="20" height="8" rx="2" />
+        <line x1="6" y1="6" x2="6.01" y2="6" strokeWidth="3" />
+        <line x1="6" y1="18" x2="6.01" y2="18" strokeWidth="3" />
+      </svg>
+    );
+  }
+  if (path.includes("chat")) {
+    return (
+      <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 8v8" />
+      <path d="M8 12h8" />
+    </svg>
+  );
+}
+
+function getBreadcrumb(pathname: string) {
+  if (pathname === "/") {
+    return { section: "工作台", page: "控制台概览" };
+  }
+  if (pathname.startsWith("/ai/providers")) {
+    return { section: "底座基础设施", page: "Provider 管理" };
+  }
+  if (pathname.startsWith("/ai/chat")) {
+    return { section: "AI 业务插件", page: "智能对话助手 (ai.chat)" };
+  }
+  return { section: "控制台", page: pathname };
+}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [theme, setTheme] = useState<ThemeMode>("white");
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const saved = localStorage.getItem("modu_theme") as ThemeMode | null;
-    if (saved === "white" || saved === "beige") {
-      setTheme(saved);
-      document.documentElement.setAttribute("data-theme", saved);
-    } else {
-      document.documentElement.setAttribute("data-theme", "white");
-    }
-  }, []);
-
-  function handleThemeChange(nextTheme: ThemeMode) {
-    setTheme(nextTheme);
-    document.documentElement.setAttribute("data-theme", nextTheme);
-    try {
-      localStorage.setItem("modu_theme", nextTheme);
-    } catch {
-      // ignore storage errors
-    }
-  }
+  const breadcrumb = getBreadcrumb(pathname);
 
   return (
     <div className="shell">
       <aside className="sidebar">
-        <Link href="/" className="brand">
-          <span className="brand-badge">M</span>
-          <span>Modu-AI</span>
-        </Link>
-        {navSections.map((section) => (
-          <div key={section.title}>
-            <div className="sidebar-group">{section.title}</div>
-            {section.items.map((item) => {
-              const active = pathname === item.path;
-              return (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  className={active ? "nav nav-active" : "nav"}
-                >
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
+        <div className="sidebar-header">
+          <Link href="/" className="brand">
+            <div className="brand-icon">M</div>
+            <div className="brand-text">
+              <span className="brand-title">Modu AI Platform</span>
+              <span className="brand-tag">企业级 AI 模块底座</span>
+            </div>
+          </Link>
+        </div>
+
+        <div className="sidebar-body">
+          <div className="sidebar-group">
+            <div className="sidebar-group-title">控制台</div>
+            <Link
+              href="/"
+              className={pathname === "/" ? "nav nav-active" : "nav"}
+            >
+              {getNavIcon("/")}
+              <span>控制台首页</span>
+            </Link>
           </div>
-        ))}
+
+          {navSections.map((section) => (
+            <div key={section.title} className="sidebar-group">
+              <div className="sidebar-group-title">{section.title}</div>
+              {section.items.map((item) => {
+                const active = pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    className={active ? "nav nav-active" : "nav"}
+                  >
+                    {getNavIcon(item.path)}
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+
+        <div className="sidebar-footer">
+          <div className="system-status">
+            <span className="status-indicator">
+              <span className="status-dot" />
+              <span>系统网关在线</span>
+            </span>
+            <span className="badge">v0.1.0</span>
+          </div>
+          <div className="muted" style={{ fontSize: "11px" }}>
+            隔离契约 · HostAdapter
+          </div>
+        </div>
       </aside>
+
       <main className="content">
         <header className="topbar">
           <div className="topbar-left">
-            <span>Modu-AI 控制台</span>
-            <span className="topbar-tag">独立部署</span>
+            <span className="breadcrumb-root">{breadcrumb.section}</span>
+            <span className="breadcrumb-sep">/</span>
+            <span className="breadcrumb-current">{breadcrumb.page}</span>
           </div>
           <div className="topbar-right">
-            <div className="theme-switcher" role="radiogroup" aria-label="主题风格切换">
-              <button
-                type="button"
-                className={`theme-btn ${mounted && theme === "white" ? "theme-btn-active" : ""}`}
-                onClick={() => handleThemeChange("white")}
-                title="切换到白色透明风格"
-              >
-                <span className="dot dot-white" />
-                <span>白色透明</span>
-              </button>
-              <button
-                type="button"
-                className={`theme-btn ${mounted && theme === "beige" ? "theme-btn-active" : ""}`}
-                onClick={() => handleThemeChange("beige")}
-                title="切换到温润米黄风格"
-              >
-                <span className="dot dot-beige" />
-                <span>温润米黄</span>
-              </button>
-            </div>
+            <span className="env-pill">
+              <span className="status-dot" style={{ width: "6px", height: "6px" }} />
+              <span>生产环境 · Standalone</span>
+            </span>
           </div>
         </header>
-        {children}
+
+        <div className="main-container">
+          {children}
+        </div>
       </main>
+
       <Toaster />
     </div>
   );

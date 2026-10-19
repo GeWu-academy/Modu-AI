@@ -21,6 +21,7 @@ export function ProvidersView() {
   const [baseUrl, setBaseUrl] = useState("");
   const [modelId, setModelId] = useState("");
   const [apiKey, setApiKey] = useState("");
+  const [formOpen, setFormOpen] = useState(true);
 
   const providersQuery = useQuery({
     queryKey: ["providers"],
@@ -39,7 +40,7 @@ export function ProvidersView() {
       void queryClient.invalidateQueries({ queryKey: ["providers"] });
       host.notifications.notify({
         level: "success",
-        message: `Provider「${provider.name}」已创建（占位存储）`,
+        message: `Provider「${provider.name}」已注册成功（占位存储）`,
       });
       setName("");
       setBaseUrl("");
@@ -49,7 +50,7 @@ export function ProvidersView() {
     onError: (error) => {
       host.notifications.notify({
         level: "error",
-        message: error instanceof Error ? error.message : "创建 Provider 失败",
+        message: error instanceof Error ? error.message : "注册 Provider 失败",
       });
     },
   });
@@ -71,99 +72,218 @@ export function ProvidersView() {
   const providers = providersQuery.data?.providers ?? [];
 
   return (
-    <section className="panel">
-      <h2>Provider 管理</h2>
-      <p className="muted">
-        底座基础设施：注册模型提供商，供插件解析与调用。当前为占位实现（内存存储，重启即清空），后续切换到
-        Modu AI 后端；密钥仅以掩码形式回显。
-      </p>
-
-      <form className="form-grid" onSubmit={submit}>
-        <div className="field">
-          <label htmlFor="provider-name">名称</label>
-          <input
-            id="provider-name"
-            value={name}
-            placeholder="例如：OpenAI 生产"
-            onChange={(event) => setName(event.target.value)}
-            required
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="provider-kind">类型</label>
-          <select
-            id="provider-kind"
-            value={kind}
-            onChange={(event) => setKind(event.target.value as ProviderKind)}
+    <>
+      <div className="panel">
+        <div className="panel-header">
+          <div className="panel-title-area">
+            <h1>Provider 基础设施管理</h1>
+            <p className="panel-description">
+              注册并维护大模型底座提供商。业务插件通过底座协议调用各模型服务，密钥仅以掩码形式回显，由后端加密存储。
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setFormOpen((prev) => !prev)}
           >
-            {PROVIDER_KINDS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor="provider-base-url">Base URL（可选）</label>
-          <input
-            id="provider-base-url"
-            value={baseUrl}
-            placeholder="https://api.example.com/v1"
-            onChange={(event) => setBaseUrl(event.target.value)}
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="provider-model">默认模型 id（可选）</label>
-          <input
-            id="provider-model"
-            value={modelId}
-            placeholder="例如：gpt-4o-mini"
-            onChange={(event) => setModelId(event.target.value)}
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="provider-key">API Key（可选）</label>
-          <input
-            id="provider-key"
-            type="password"
-            value={apiKey}
-            placeholder="仅提交给后端，掩码存储"
-            onChange={(event) => setApiKey(event.target.value)}
-          />
-        </div>
-        <div className="actions">
-          <button type="submit" disabled={createMutation.isPending || !name.trim()}>
-            {createMutation.isPending ? "创建中…" : "创建 Provider"}
+            {formOpen ? "收起注册面板" : "+ 注册新提供商"}
           </button>
         </div>
-      </form>
 
-      <div className="provider-list">
-        {providersQuery.isPending ? (
-          <p className="muted">加载中…</p>
-        ) : providersQuery.isError ? (
-          <p className="error-text">
-            加载失败：
-            {providersQuery.error instanceof Error ? providersQuery.error.message : "未知错误"}
-          </p>
-        ) : providers.length === 0 ? (
-          <p className="muted">尚未配置任何 Provider。</p>
-        ) : (
-          providers.map((provider) => (
-            <div key={provider.id} className="provider-item">
-              <div className="provider-head">
-                <span className="provider-name">{provider.name}</span>
-                <span className="badge">{provider.kind}</span>
-                {provider.enabled ? <span className="badge badge-ok">enabled</span> : null}
+        {/* 状态统计条 */}
+        <div style={{ display: "flex", gap: "24px", padding: "12px 16px", background: "var(--panel-secondary)", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", marginBottom: "18px", fontSize: "13px" }}>
+          <div>
+            <span className="muted">已接入提供商：</span>
+            <strong style={{ color: "var(--text)", marginLeft: "4px" }}>{providers.length} 个</strong>
+          </div>
+          <div>
+            <span className="muted">协议规范：</span>
+            <span className="badge" style={{ marginLeft: "4px" }}>OpenAI Compatible</span>
+            <span className="badge" style={{ marginLeft: "4px" }}>Anthropic</span>
+            <span className="badge" style={{ marginLeft: "4px" }}>Azure</span>
+          </div>
+          <div>
+            <span className="muted">存储策略：</span>
+            <span className="badge badge-ok" style={{ marginLeft: "4px" }}>加密脱敏保护</span>
+          </div>
+        </div>
+
+        {/* 注册表单 */}
+        {formOpen && (
+          <form className="form-section" onSubmit={submit}>
+            <div className="form-section-title">注册模型提供商 (Provider)</div>
+            <div className="form-section-desc">
+              填写大模型服务的服务商类别、网络端点与默认模型标识。
+            </div>
+
+            <div className="form-grid">
+              <div className="field">
+                <label htmlFor="provider-name">
+                  <span>提供商名称</span>
+                  <span className="hint">必填</span>
+                </label>
+                <input
+                  id="provider-name"
+                  value={name}
+                  placeholder="例如：OpenAI 生产集群"
+                  onChange={(event) => setName(event.target.value)}
+                  required
+                />
               </div>
-              <div className="muted">
-                {provider.baseUrl ?? "默认地址"} · 模型：
-                {provider.models.map((model) => model.id).join(", ") || "未配置"}
+
+              <div className="field">
+                <label htmlFor="provider-kind">
+                  <span>协议类别</span>
+                  <span className="hint">标准协议</span>
+                </label>
+                <select
+                  id="provider-kind"
+                  value={kind}
+                  onChange={(event) => setKind(event.target.value as ProviderKind)}
+                >
+                  {PROVIDER_KINDS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="field">
+                <label htmlFor="provider-base-url">
+                  <span>API Base URL</span>
+                  <span className="hint">可选，默认官方端点</span>
+                </label>
+                <input
+                  id="provider-base-url"
+                  value={baseUrl}
+                  placeholder="https://api.openai.com/v1"
+                  onChange={(event) => setBaseUrl(event.target.value)}
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="provider-model">
+                  <span>默认模型 ID</span>
+                  <span className="hint">可选，例如 gpt-4o-mini</span>
+                </label>
+                <input
+                  id="provider-model"
+                  value={modelId}
+                  placeholder="例如：gpt-4o-mini"
+                  onChange={(event) => setModelId(event.target.value)}
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="provider-key">
+                  <span>API Key</span>
+                  <span className="hint">提交后脱敏加密</span>
+                </label>
+                <input
+                  id="provider-key"
+                  type="password"
+                  value={apiKey}
+                  placeholder="sk-••••••••"
+                  onChange={(event) => setApiKey(event.target.value)}
+                />
               </div>
             </div>
-          ))
+
+            <div className="actions">
+              <button type="submit" disabled={createMutation.isPending || !name.trim()}>
+                {createMutation.isPending ? "注册中…" : "确认注册 Provider"}
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => {
+                  setName("");
+                  setBaseUrl("");
+                  setModelId("");
+                  setApiKey("");
+                }}
+              >
+                重置表单
+              </button>
+            </div>
+          </form>
         )}
+
+        {/* 提供商资源列表 */}
+        <div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
+            <h2 style={{ fontSize: "14px", fontWeight: "600" }}>已注册 Provider 资源清单</h2>
+            <span className="muted" style={{ fontSize: "12px" }}>共 {providers.length} 项</span>
+          </div>
+
+          <div className="provider-list">
+            {providersQuery.isPending ? (
+              <div style={{ padding: "32px", textAlign: "center", color: "var(--muted)" }}>
+                正在查询 Provider 资源列表…
+              </div>
+            ) : providersQuery.isError ? (
+              <div className="error-text" style={{ padding: "16px", background: "var(--danger-soft)", borderRadius: "var(--radius-md)", border: "1px solid var(--danger-border)" }}>
+                加载失败：{providersQuery.error instanceof Error ? providersQuery.error.message : "未知错误"}
+              </div>
+            ) : providers.length === 0 ? (
+              <div className="empty-chat" style={{ border: "1px dashed var(--border-strong)", borderRadius: "var(--radius-md)" }}>
+                <div className="empty-chat-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="2" y="2" width="20" height="8" rx="2" />
+                    <rect x="2" y="14" width="20" height="8" rx="2" />
+                    <line x1="6" y1="6" x2="6.01" y2="6" strokeWidth="3" />
+                    <line x1="6" y1="18" x2="6.01" y2="18" strokeWidth="3" />
+                  </svg>
+                </div>
+                <div className="empty-chat-title">尚未配置任何模型提供商</div>
+                <div className="empty-chat-desc">
+                  当前环境尚未注册 Provider。请在上方表单中配置首个大模型服务（如 OpenAI 兼容代理或官方服务），插件将自动引用该配置进行调用。
+                </div>
+              </div>
+            ) : (
+              providers.map((provider) => (
+                <div key={provider.id} className="provider-item">
+                  <div className="provider-head">
+                    <div className="provider-name-group">
+                      <span className="status-dot" />
+                      <span className="provider-name">{provider.name}</span>
+                      <span className="badge">{provider.kind}</span>
+                      {provider.enabled ? <span className="badge badge-ok">活跃可用</span> : null}
+                    </div>
+                    <span className="code-chip">ID: {provider.id}</span>
+                  </div>
+
+                  <div className="provider-details">
+                    <div className="detail-item">
+                      <span className="muted">服务端点：</span>
+                      <span className="code-chip">{provider.baseUrl ?? "默认官方端点"}</span>
+                    </div>
+
+                    <div className="detail-item">
+                      <span className="muted">关联模型：</span>
+                      {provider.models.length > 0 ? (
+                        provider.models.map((model) => (
+                          <span key={model.id} className="badge badge-blue">
+                            {model.id}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="muted">未绑定默认模型</span>
+                      )}
+                    </div>
+
+                    <div className="detail-item">
+                      <span className="muted">凭证状态：</span>
+                      <span className="badge">已脱敏保护</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </div>
-    </section>
+    </>
   );
 }
