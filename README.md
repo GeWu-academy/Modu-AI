@@ -49,3 +49,8 @@ pnpm typecheck      # next typegen + tsc --noEmit
 - 底座（Provider 注册表/插件注册表）+ 首个插件（对话助手）+ 独立应用壳已就绪。
 - Provider 管理页可创建/列出 Provider（占位内存存储）；对话走占位接口（未接真实模型与流式渲染）。
 - 契约（类型、manifest、HostAdapter、API DTO）以 `apps/web/src/ai-module/contracts` 为源头，后续同步 Modu `apps/api/api/openapi.yaml`。
+
+
+## Host HTTP 客户端回归检查
+
+使用 Node.js 22.6+ 运行 `pnpm --filter @modu-ai/web test`。测试使用 Node 自带运行器及本地 HTTP 服务，不调用真实 Provider；覆盖 204/205 空响应、JSON 收发及非成功状态。应用生产环境最低 Node 版本不变。提交前同时执行 `pnpm typecheck` 和 `pnpm build`。

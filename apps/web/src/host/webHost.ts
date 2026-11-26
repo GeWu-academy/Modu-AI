@@ -60,6 +60,9 @@ export function createWebHost(): HostAdapter {
             `${method} ${path} 失败：HTTP ${response.status}${detail ? ` · ${detail}` : ""}`,
           );
         }
+        if (response.status === 204 || response.status === 205) {
+          return undefined as TResponse;
+        }
         return (await response.json()) as TResponse;
       },
     },
