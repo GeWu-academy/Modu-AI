@@ -8,6 +8,7 @@
     "dev": "pnpm --filter @modu-ai/web dev",
     "build": "pnpm --filter @modu-ai/web build",
     "start": "pnpm --filter @modu-ai/web start",
-    "typecheck": "pnpm --filter @modu-ai/web typecheck"
+    "typecheck": "pnpm --filter @modu-ai/web typecheck",
+    "test": "pnpm --filter @modu-ai/web test"
   }
 }
